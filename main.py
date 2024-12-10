@@ -115,7 +115,6 @@ class ContractorCategoryRead(ContractorCategoryBase):
 
 # ---- CRUD для мероприятий ----
 
-# Создание нового мероприятия
 @app.post("/events/", response_model=EventRead)
 def create_event(event: EventCreate, db: Session = Depends(get_db)):
     db_event = Event(**event.dict())
@@ -124,13 +123,11 @@ def create_event(event: EventCreate, db: Session = Depends(get_db)):
     db.refresh(db_event)
     return db_event
 
-# Получение списка всех мероприятий
 @app.get("/events/", response_model=List[EventRead])
 def read_events(db: Session = Depends(get_db)):
     events = db.query(Event).all()
     return events
 
-# Получение одного мероприятия по ID
 @app.get("/events/{event_id}", response_model=EventRead)
 def read_event(event_id: int, db: Session = Depends(get_db)):
     event = db.query(Event).filter(Event.event_id == event_id).first()
@@ -138,7 +135,6 @@ def read_event(event_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Event not found")
     return event
 
-# Обновление мероприятия
 @app.put("/events/{event_id}", response_model=EventRead)
 def update_event(event_id: int, updated_event: EventCreate, db: Session = Depends(get_db)):
     event = db.query(Event).filter(Event.event_id == event_id).first()
@@ -150,7 +146,6 @@ def update_event(event_id: int, updated_event: EventCreate, db: Session = Depend
     db.refresh(event)
     return event
 
-# Удаление мероприятия
 @app.delete("/events/{event_id}")
 def delete_event(event_id: int, db: Session = Depends(get_db)):
     event = db.query(Event).filter(Event.event_id == event_id).first()
